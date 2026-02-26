@@ -1,0 +1,292 @@
+---
+title: "class13: rnaseq w deseq2"
+author: "sylvia ho a18482382"
+format: pdf
+---
+##bg
+rnaseq analysis on effects of dexamethasone (dex)
+steroid airway smooth muscle (asm) cell lines
+
+- **countdata** table w genes as rws and samples/experiments as cols
+- **coldata**: meta data ab cols 
+
+```{r}
+library(BiocManager)
+library(DESeq2)
+counts <- read.csv("airway_scaledcounts.csv", row.names=1)
+metadata <-  read.csv("airway_metadata.csv")
+head(counts)
+head(metadata)
+```
+## check metadata counts correspondance
+check metadata matches samples in count data
+
+```{r}
+colnames(counts) ==
+metadata$id
+```
+
+```{r}
+all(c(T,T,F))
+```
+
+
+>Q1. How many genes are in this dataset? 
+38694
+
+```{r}
+nrow(counts)
+```
+
+>Q2. How many ‘control’ cell lines do we have? 
+4
+
+```{r}
+sum(metadata$dex == "control")
+```
+
+## analysis plan
+4 replicates ("control" and "txt") comp to see which gene exp lvls change when drug present
+row by row or gene by gene to see avg cal in ctrl cols diff from avg val in txt cols
+
+ - 1. find cols in counts that corr to ctrl samples
+ - 2. extract/select cols
+
+```{r}
+#indices ie positions that are ctrl
+
+control.inds <- metadata$dex == "control"
+#extract/select
+ctrl.counts<-counts[, control.inds]
+ctrl.mean<-rowMeans(ctrl.counts)
+
+```
+
+```{r}
+txt.counts<-rowMeans(counts[,metadata$dex=="treated"])
+```
+
+```{r}
+meancounts<-data.frame(ctrl.mean,txt.counts)
+head(meancounts)
+```
+
+>Q3. How would you make the above code in either approach more robust? Is there a function that could help here? 
+
+
+>Q4. Follow the same procedure for the treated samples (i.e. calculate the mean per gene across drug treated samples and assign to a labeled vector called treated.mean)
+
+```{r}
+txt.inds <- metadata$dex == "treated"
+#extract/select
+txt.counts<-counts[, txt.inds]
+txt.mean<-rowMeans(txt.counts)
+
+```
+>Q5 ggplot avg counts of ctrl vs tx 
+
+```{r}
+library(ggplot2)
+ggplot(meancounts)+
+  aes(ctrl.mean,txt.mean)+
+  scale_y_log10() +
+  scale_x_log10()   +
+  geom_point(alpha=.3)
+
+```
+>Q6 add a new col called 'log2fc' for fold change of txt/ctrl to our `meancounts` obj
+
+```{r}
+# doubling in txt vs control
+log2(40/20)
+meancounts$log2fc <- log2(meancounts[,"txt.counts"]/meancounts[,"ctrl.mean"])
+head(meancounts)
+
+```
+
+```{r}
+zero.vals <- which(meancounts[,1:2]==0, arr.ind=TRUE)
+
+to.rm <- unique(zero.vals[,1])
+mycounts <- meancounts[-to.rm,]
+head(mycounts)
+```
+>Q7. What is the purpose of the arr.ind argument in the which() function call above? Why would we then take the first column of the output and need to call the unique() function?
+
+- purpose is to take out genes that are zeros so it doesnt break analysis when trying to divide by zero. purpose arr.ind is to get row/col positions of the zeros
+
+
+>Q8. Using the up.ind vector above can you determine how many up regulated genes we have at the greater than 2 fc level? 
+
+- 250
+
+>Q9. Using the down.ind vector above can you determine how many down regulated genes we have at the greater than 2 fc level? 
+
+- 367
+
+>Q10. Do you trust these results? Why or why not?
+
+- no, there is no analysis of whether the up or down regulation is significant, so they are likely overrepresented
+
+
+```{r}
+up.ind <- mycounts$log2fc > 2
+down.ind <- mycounts$log2fc < (-2)
+sum(up.ind)
+sum(down.ind)
+```
+## Dseq
+
+```{r}
+library(DESeq2)
+citation("DESeq2")
+```
+
+matrix
+
+```{r}
+dds <- DESeqDataSetFromMatrix(countData=counts, 
+                              colData=metadata, 
+                              design=~dex)
+dds
+
+
+```
+##pca
+stabilizing `vst`
+```{r}
+vsd <- vst(dds, blind = FALSE)
+plotPCA(vsd, intgroup = c("dex"))
+```
+```{r}
+pcaData <- plotPCA(vsd, intgroup=c("dex"), returnData=TRUE)
+head(pcaData)
+```
+```{r}
+percentVar <- round(100 * attr(pcaData, "percentVar"))
+ggplot(pcaData) +
+  aes(x = PC1, y = PC2, color = dex) +
+  geom_point(size =3) +
+  xlab(paste0("PC1: ", percentVar[1], "% variance")) +
+  ylab(paste0("PC2: ", percentVar[2], "% variance")) +
+  coord_fixed() +
+  theme_bw()
+```
+## analysis
+`DESeq()` takes a desds and returns w additionsal info
+
+```{r}
+#results(dds)
+```
+```{r}
+dds <- DESeq(dds)
+```
+```{r}
+res <- results(dds)
+res
+```
+```{r}
+summary(res)
+```
+
+```{r}
+res05 <- results(dds, alpha=0.05)
+summary(res05)
+```
+```{r}
+library("AnnotationDbi")
+library("org.Hs.eg.db")
+
+columns(org.Hs.eg.db)
+
+```
+
+### `maplds()` to add cols
+
+```{r}
+res$symbol <- mapIds(org.Hs.eg.db,
+                     keys=row.names(res), 
+                     keytype="ENSEMBL",        # The format 
+                     column="SYMBOL",          # The format we want 
+                     multiVals="first")
+head(res)
+
+```
+>Q11. Run the mapIds() function two more times to add the Entrez ID and UniProt accession and GENENAME as new columns called res$entrez, res$uniprot and res$genename.
+
+
+```{r}
+res$entrez <- mapIds(org.Hs.eg.db,
+                     keys=row.names(res),
+                     column="ENTREZID",
+                     keytype="ENSEMBL",
+                     multiVals="first")
+
+res$uniprot <- mapIds(org.Hs.eg.db,
+                     keys=row.names(res),
+                     column="UNIPROT",
+                     keytype="ENSEMBL",
+                     multiVals="first")
+
+res$genename <- mapIds(org.Hs.eg.db,
+                     keys=row.names(res),
+                     column="GENENAME",
+                     keytype="ENSEMBL",
+                     multiVals="first")
+
+head(res)
+```
+```{r}
+#arr by pval
+ord <- order( res$padj )
+#View(res[ord,])
+head(res[ord,])
+```
+```{r}
+#annotate
+write.csv(res[ord,], "deseq_results.csv")
+
+```
+##volcano plaot proportion log change x nas - log p on y aka smaller p = larger -log10
+
+```{r}
+# Setup our custom point color vector 
+mycols <- rep("gray", nrow(res))
+mycols[ abs(res$log2FoldChange) > 2 ]  <- "red" 
+
+inds <- (res$padj < 0.01) & (abs(res$log2FoldChange) > 2 )
+mycols[ inds ] <- "blue"
+
+# Volcano plot with custom colors 
+plot( res$log2FoldChange,  -log(res$padj), 
+ col=mycols, ylab="-Log(P-value)", xlab="Log2(FoldChange)" )
+
+# Cut-off lines
+abline(v=c(-2,2), col="gray", lty=2)
+abline(h=-log(0.1), col="gray", lty=2)
+```
+```{r}
+library(EnhancedVolcano)
+
+x <- as.data.frame(res)
+
+EnhancedVolcano(x,
+    lab = x$symbol,
+    x = 'log2FoldChange',
+    y = 'pvalue')
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

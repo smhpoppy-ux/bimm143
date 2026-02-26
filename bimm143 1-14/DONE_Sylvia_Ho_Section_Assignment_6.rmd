@@ -1,0 +1,243 @@
+---
+title: "Section Assignment 6"
+date: "1/17/24"
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(eval = TRUE)
+knitr::opts_chunk$set(error = TRUE)
+knitr::opts_chunk$set(tidy = TRUE)
+```
+
+
+### Things-to-Note:
+
+1.  Download your three files for the week directly from the Canvas assignment. Place them in their own week 6 folder on your computer where there are no other files.
+
+2.  Create a similar week 6 folder on Datahub within your private directory.
+
+3.  Before you start working on the assignment within RStudio, make sure to set the working directory.
+
+**It is your responsibility to make sure each code block runs without error before you turn it in. Some errors prevent us from grading your assignment and you will receive the minimum submission score of 5.**
+
+------------------------------------------------------------------------
+
+Your Information: -
+
+```{r}
+### - NOT INCLUDING THIS INFORMATION WILL RESULT IN A 2 POINT DEDUCTION - ###
+firstname <- "sylvia"   # example: "Liam"
+lastname <- "ho"  # example: "Mueller"
+username <- "smh005"  #example: "lomueller"   Do not include the "@ucsd.edu" part!
+```
+
+------------------------------------------------------------------------
+
+***
+Please Read!  
+
+
+This week, your assignment is a series of review problems derived from past weeks. Use this week's assignment as an opportunity to cement what you have learned so far, before we jump into more complex topics next week! 
+
+
+Since we have already downloaded and installed the necessary packages, this week, simply load the tidyverse functions into your working library:
+```{r,echo=FALSE}
+### The output for this code block looks weird and kind of like an error, but it is not an error. ###
+library(tidyverse)
+```
+These lines of code above will need to be run each time you start a new R session.
+
+One of the traits of a great programmer is their ability to solve a problem they haven't seen before. One of the best ways to solve a problem you have not seen before is to see if anyone else has. Great programmers are experts of web searching. Do not be afraid to find code on an online help page and run it! 
+
+Copying from the internet is one of the foundations of learning how to program, but it only works as learning if you reflect on why the code you used works. For that reason, this week and in future weeks, you will need to annotate your code or answer a specific question about the process. You will be graded on not just your code, but your explanation. **Remember, in this class, it is okay to copy code, but you still need to demonstrate independent thought.**
+
+  ***  
+  
+
+Question 1: Read in this week's data set "Week6SoilData.csv". These data represent inorganic soil nitrogen (NO3-) concentrations from 500 gardens collected in both 2018 and 2021. The nitrogen concentration was determined by combustion analysis and is presented as a proportion of total nitrogen (from 0 to 1). 
+```{r}
+### - It is your resonsibility to place this rmd file in the same folder as the data file and make sure the file name matches 'Week6SoilData.csv' - ###
+### - DO NOT EDIT THE NEXT TWO LINES OF CODE - ###
+W6Data<-read.csv("Week6SoilData.csv")
+head(W6Data)
+
+```
+
+
+```{r}
+### This chunk of code is for grading purposes. 
+### Don't change/delete this chunk of code. 
+q1 <- W6Data
+```
+
+  ***
+    
+
+
+Question 2: How many gardens in 2018 had more than 20% of their total nitrogen in inorganic nitrogen? 
+```{r}
+###High_Inorganic_N<- count(W6Data$SoilN2018>.20)
+###High_Inorganic_N<- sum(W6Data$SoilN2018>.20)
+###High_Inorganic_N <- length(which(W6Data$SoilN201 >.20))
+High_Inorganic_N <- W6Data %>% count(SoilN2018>.20)
+
+
+High_Inorganic_N
+
+###There are many ways to answer this question. Explain how your code counts how many gardens had high inorganic nitrogen in 2018
+# count function counts unique values (gardens) in W6Data where column SoilN2018 has a value greater than .2 (20%), which is marked in the df as true and gives the count as 152.  
+```
+
+```{r}
+### This chunk of code is for grading purposes. 
+### Don't change/delete this chunk of code. 
+q2 <- High_Inorganic_N
+```
+
+ ***  
+   
+
+
+Question 3: Convert the 'W6Data' table into a tidy table. Hint:`names_to = "Year",values_to = "InorganicN"`
+```{r}
+GardenData<- pivot_longer(W6Data, cols= 2:3, names_to = "Year",values_to = "InorganicN")
+str(GardenData)
+```
+
+  ***
+    
+```{r}
+### This chunk of code is for grading purposes. 
+### Don't change/delete this chunk of code. 
+q3 <- GardenData
+```
+
+
+Question 4: Is the Inorganic Nitrogen data normally distributed? Use both a histogram and the ks.test() to support your answer.
+```{r}
+Histogram1<- ggplot(GardenData, aes(x=InorganicN)) + geom_histogram()
+
+Histogram1 
+```
+```{r}
+ks.test(GardenData$InorganicN, "pnorm", mean(GardenData$InorganicN), sd(GardenData$InorganicN))
+```
+
+```{r}
+### This chunk of code is for grading purposes. 
+### Don't change/delete this chunk of code. 
+q4 <- Histogram1
+```
+
+Question 5: Is the Inorganic Nitrogen data normally distributed? Answer with a TRUE or FALSE statement:
+
+```{r}
+q5 <- FALSE
+```
+
+  ***  
+    
+
+
+Question 6: Use the `mutate()` function to create a data column that is transformed InorganicN data. Hint: Try a square root transformation this time.
+```{r}
+T_Garden_Data<-  GardenData |>mutate(Sqrt_InorganicN = sqrt(InorganicN))
+###%>% mutate(Sqrt_InorganicN = sqrt(InorganicN))
+str(T_Garden_Data)
+
+###Explain how you used the mutate function to create a transformed data column
+# the mutate function creates a new column called Sqrt_InorganicN that is the square root of InorganicN.
+```
+
+```{r}
+### This chunk of code is for grading purposes. 
+### Don't change/delete this chunk of code. 
+q6<- T_Garden_Data
+```
+
+  ***  
+    
+
+Question 7: Is the transformed Inorganic Nitrogen data normally distributed? Use both a histogram and the ks.test() to support your answer.
+
+```{r}
+Histogram2<- ggplot(T_Garden_Data, aes(x=Sqrt_InorganicN)) + geom_histogram()
+Histogram2
+```
+```{r}
+ks.test(T_Garden_Data$Sqrt_InorganicN, "pnorm", mean(T_Garden_Data$Sqrt_InorganicN), sd(T_Garden_Data$Sqrt_InorganicN))
+```
+
+```{r}
+### This chunk of code is for grading purposes. 
+### Don't change/delete this chunk of code. 
+q7<- Histogram2
+```
+
+Question 8 (1 point): Is the transformed Inorganic Nitrogen data normally distributed? Answer with a TRUE or FALSE statement
+
+```{r}
+q8<- TRUE
+```
+
+
+  ***  
+    
+
+
+Question 9: Use ggplot to create a boxplot of the two years of transformed nitrogen data. Do your best to get your graph to look like the example given in the Canvas assignment. Hint 1: `geom_boxplot` Hint 2: If your plot is not looking like the example, go back to your week 3 section assignment and look at how we changed axis labels and the theme.
+```{r}
+Boxplot1<-ggplot(T_Garden_Data, aes(x=Year, y=Sqrt_InorganicN)) + geom_boxplot()+
+ylab("Square root of inorganic N proportion")
+Boxplot1
+
+###Explain the steps you took to generate the boxplot. You can do all of that on this line, or add annotation to each line of your code for this question.
+# I made a boxplot with the T_Garden_Data with x axis year and y axis the square root of inorganic n. I then labelled y axis "Square root of inorganic N proportion"
+```
+
+```{r}
+### This chunk of code is for grading purposes. 
+### Don't change/delete this chunk of code. 
+q9<- Boxplot1
+```
+
+  ***  
+    
+
+
+Question 10: Calculate the mean and 95% confidence interval for the inorganic N proportion in all gardens measured in 2018. Report your answers in the original units. Hint 1: The mean only means what we think the mean means when the data are normal! Hint 2: The back transformation of a square root transformation is x^2.
+```{r}
+trans2018<- T_Garden_Data$Sqrt_InorganicN[T_Garden_Data$Year=="SoilN2018"]
+tmean <- mean(trans2018)
+tse<- sd(trans2018)/sqrt(length(trans2018))
+q3 <- qt(p=.975, df=length(trans2018)-1)
+q1 <- qt(p=.025, df=length(trans2018)-1)
+tup <- tmean+q3*tse
+tlow<- tmean+q1*tse
+upperCI<-tup^2
+meanN<-mean(trans2018)^2
+lowerCI<-tlow^2
+
+upperCI
+meanN
+lowerCI
+
+```
+
+```{r}
+### This chunk of code is for grading purposes. 
+### Don't change/delete this chunk of code. 
+q10<- cbind(upperCI,meanN,lowerCI)
+```
+    
+
+Once you are done, click the "Knit" button above(It looks like a blue ball of yarn). Save the file with your name and the week number in the file name:
+
+(for example: "DONE_Liam_Mueller_Section_Assignment_4.rmd").
+
+**Then upload the .rmd file to canvas under the Week 4 Section Assignment before the deadline.**
+
+And that is it for this week! Great job! 

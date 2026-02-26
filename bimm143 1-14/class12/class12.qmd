@@ -1,0 +1,41 @@
+---
+title: "class12hw"
+author: "sylvia ho a18482382"
+format: pdf
+---
+
+>q13 
+smaple siz: a/a: 108, a/g: 233, g/g/:121
+median: 
+A/A	31.24847			
+A/G	25.06486			
+G/G	20.07363	
+
+```{r}
+df1<-read.table("df.txt")
+bx1<-boxplot(df1$exp ~ df1$geno)
+table(df1$geno)
+
+library(dplyr)
+df1 %>%
+  group_by(geno) %>%
+  summarize(median_value = median(exp, na.rm = TRUE))
+```
+
+>q14
+
+```{r}
+library(ggplot2)
+
+ggplot(df1)+aes(geno,exp,fill=geno)+
+  geom_boxplot(notch=TRUE)
+
+```
+```{r}
+df1
+```
+
+
+
+
+

@@ -1,0 +1,132 @@
+---
+title: "class11"
+author: "sylvia ho a18482382"
+format: pdf
+---
+
+```{r}
+results_dir <- "~/Downloads/HIVPrDimer_23119" 
+pdb_files <- list.files(path=results_dir,
+                        pattern="*.pdb",
+                        full.names = TRUE)
+
+# Print our PDB file names
+basename(pdb_files)
+```
+```{r}
+library(bio3d)
+
+# Read all data from Models 
+#  and superpose/fit coords
+pdbs <- pdbaln(pdb_files, fit=TRUE, exefile="msa")
+```
+```{r}
+rd <- rmsd(pdbs, fit=T)
+range(rd)
+```
+
+
+
+![molstar hpv pr](hivpr1.png)
+
+
+
+```{r}
+library(pheatmap)
+
+colnames(rd) <- paste0("m",1:5)
+rownames(rd) <- paste0("m",1:5)
+pheatmap(rd)
+pdb <- read.pdb("1hsg")
+
+```
+```{r}
+core <- core.find(pdbs)
+
+
+core.inds <- print(core, vol=0.5)
+
+
+xyz <- pdbfit(pdbs, core.inds, outpath="corefit_structures")
+```
+```{r}
+rf <- rmsf(xyz)
+
+plotb3(rf, sse=pdb)
+abline(v=100, col="gray", ylab="RMSF")
+```
+
+```{r}
+library(jsonlite)
+
+# Listing of all PAE JSON files
+pae_files <- list.files(path=results_dir,
+                        pattern=".*model.*\\.json",
+                        full.names = TRUE)
+
+
+pae1 <- read_json(pae_files[1],simplifyVector = TRUE)
+pae5 <- read_json(pae_files[5],simplifyVector = TRUE)
+
+attributes(pae1)
+
+
+head(pae1$plddt) 
+pae1$max_pae
+pae5$max_pae
+
+```
+```{r}
+plot.dmat(pae1$pae, 
+          xlab="Residue Position (i)",
+          ylab="Residue Position (j)",
+          grid.col = "black",
+          zlim=c(0,30))
+plot.dmat(pae5$pae, 
+          xlab="Residue Position (i)",
+          ylab="Residue Position (j)",
+          grid.col = "black",
+          zlim=c(0,30))
+```
+
+```{r}
+
+aln_file <- list.files(path=results_dir,
+                       pattern=".a3m$",
+                        full.names = TRUE)
+aln_file
+
+
+aln <- read.fasta(aln_file[1], to.upper = TRUE)
+
+
+dim(aln$ali)
+
+
+```
+
+```{r}
+sim <- conserv(aln)
+
+plotb3(sim[1:99], sse=trim.pdb(pdb, chain="A"),
+       ylab="Conservation Score")
+```
+
+```{r}
+con <- consensus(aln, cutoff = 0.9)
+con$seq
+m1.pdb <- read.pdb(pdb_files[1])
+occ <- vec2resno(c(sim[1:99], sim[1:99]), m1.pdb$atom$resno)
+write.pdb(m1.pdb, o=occ, file="m1_conserv.pdb")
+```
+
+
+
+
+![molstar conserve](M1_CONSERV.PDB.png)
+
+
+
+
+
+

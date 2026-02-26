@@ -1,0 +1,225 @@
+---
+title: "Section Assignment 4"
+date: "1/31/25"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(eval = TRUE)
+knitr::opts_chunk$set(error = TRUE)
+knitr::opts_chunk$set(tidy = TRUE)
+```
+
+### Things-to-Note:
+
+1.  Download your three files for the week directly from the Canvas assignment. Place them in their own week 4 folder on your computer where there are no other files.
+
+2.  Create a similar week 4 folder on Datahub within the private directory.
+
+3.  Before you start working on the assignment within RStudio, make sure to set the working directory.
+
+4.  Work primarily using the visual editor.
+
+5.  **Don't rename external files or edit them in any way.**
+
+6.  Don't change the variable names in the csv or in the RMD file.
+
+7.  Don't destroy or overwrite any variables.
+
+**If you don't take above instructions into account it might effect your grades.**
+
+------------------------------------------------------------------------
+
+Your Information: -
+
+```{r}
+firstname <- "sylvia"   # example: "Liam"
+lastname <- "ho"  # example: "Mueller"
+username <- "smh005"  #example: "lomueller"   Do not include the "@ucsd.edu" part!
+```
+
+------------------------------------------------------------------------
+
+Please Read!
+
+This week, your assignment is to work with the 'tidyr' and 'dplyr' packages to rearrange and manipulate data tables. Just like last week the first thing we need to do is turn on the needed packages:
+
+```{r,echo=FALSE}
+library(tidyverse)
+```
+
+The lines of code above will need to be run each time you start a new R session and need these functions.
+
+Just like last week, one of the traits of a great programmer is their ability to solve a problem they haven't seen before. One of the best ways to solve a problem you have not seen before is to see if anyone else has. Great programmers are experts of web searching. As we are working on becoming expert programmers, this week I have included the link to a set of Rstudio cheat sheets that have high information density all about the different functionalities in the tidyverse. The two most helpful for this week's assignment are the sheets on dplyr and tidyr.
+
+<https://posit.co/resources/cheatsheets/?type=posit-cheatsheets/>
+
+Copying from the internet is one of the foundations of learning how to program, but it only works as learning if you reflect on why the code you used works. For that reason, this week and in future weeks, you will need to annotate your code. Use the lines that look like this at the end of each question to input your explanation of the code:
+
+```{r,eval=FALSE,echo=TRUE}
+### comment (#)
+```
+
+You will be graded on not just your tables, but your explanation. Remember, in this class, it is okay to copy code, but you still need to demonstrate independent thought.
+
+------------------------------------------------------------------------
+
+Questions:
+
+Question 1: The following data table (BadTable) is an untidy display of the population estimate for two different years in three large Texas cities. Use the `pivot_longer()` function to assign to the GoodTable object a table with 3 columns and 6 rows. Hint, `names_to = "Year"` and `values_to = "population"`. For more hints look at the tidyr cheat sheet under "Reshape Data".
+
+```{r}
+BadTable<-read.csv(text= "City,2014,2019
+                        San Antonio,1436697,1547253
+                        Houston,2239558,2320268
+                        Austin,912791,978908")
+
+head(BadTable)
+
+GoodTable<-pivot_longer(BadTable, cols= 2:3, names_to = "Year", values_to = "Population")
+
+head(GoodTable)
+
+### reshaped data to make tidy
+```
+
+```{r}
+### This chunk of code is for grading purposes. 
+### Don't change/delete this chunk of code. 
+q1 <- GoodTable
+```
+
+------------------------------------------------------------------------
+
+Question 2: Why is GoodTable a better format than BadTable? Put another way, what makes a table tidy?
+
+```{r}
+q2 <-  "BadTable has two observations in one row. GoodTable makes each row one observation."
+```
+
+------------------------------------------------------------------------
+
+Question 3: Extract the rows from "GoodTable" where population is less than 1500000 and save them to a the object "SmallerCities" Hint: Page 1 of the dplyr cheat sheet, "Manipulate Cases"
+
+```{r}
+SmallerCities<- filter(GoodTable, Population < 1500000)
+head(SmallerCities)
+### filtered to show only where population < 1500000, saved as "SmallerCities"
+```
+
+```{r}
+### This chunk of code is for grading purposes. 
+### Don't change/delete this chunk of code. 
+q3 <- SmallerCities
+```
+
+------------------------------------------------------------------------
+
+Question 4: Rearrange "GoodTable" by high to low population. Hint: Page 1 of the dplyr cheat sheet, "Manipulate Cases"
+
+```{r}
+OrderedGoodTable<- arrange(GoodTable, -Population)
+head(OrderedGoodTable)
+### sorted table by population high to low
+```
+
+```{r}
+### This chunk of code is for grading purposes. 
+### Don't change/delete this chunk of code. 
+q4 <- OrderedGoodTable
+```
+
+------------------------------------------------------------------------
+
+Question 5 & 6: To really get a feel for the tidyverse, we need to start working with bigger data sets. The following two data tables are subsets from the flights and weather data in the "nycflights2013" package. Download The "flights.csv" and "JFKWeather.csv" files from this week's section activity on Canvas. "flights.csv" contains flight information for the 28 Hawaiian Airlines flights that departed JFK airport in February 2013. The "JFKWeather.csv" contains hourly weather data from JFK airports for the month of February 2013. Read these .csv files into R below:
+
+```{r}
+flights<- read.csv("flights.csv")
+
+weather<- read.csv("JFKWeather.csv")
+
+```
+
+```{r}
+### This chunk of code is for grading purposes. 
+### Don't change/delete this chunk of code. 
+q5 <- flights
+q6 <- weather
+```
+
+------------------------------------------------------------------------
+
+Question 7: Our goal is to combine the flight and weather data tables into one large table containing the flight information and the weather data captured the hour each flight was scheduled to take off. If you do this correctly, the resulting table should have exactly 28 rows and 23 columns. Hint: `inner_join()` on page 2 of the dplyr cheat sheet and the sections titled "RELATIONAL DATA" and "COLUMN MATCHING FOR JOINS". Hint 2: Both of these data tables share the "time_hour" column.
+
+```{r}
+CombinedTable<-inner_join(flights, weather, by = "time_hour")
+str(CombinedTable)
+###joined flights and weather information where weather matched time_hour
+```
+
+```{r}
+### This chunk of code is for grading purposes. 
+### Don't change/delete this chunk of code. 
+q7 <- CombinedTable
+```
+
+------------------------------------------------------------------------
+
+Question 8: What type of data is the third column of your dataset?
+
+```{r}
+q8<-"category of what data type assuming all the colons are their own column? if not then the first entry of each thing for 2/1, which is a mix of both numerical and categorical? or if the dataset refers to only the data data then each thing from 2/3. Or if it's referring to row 3 then departure time is numerical count data also called integer."
+```
+
+------------------------------------------------------------------------
+
+Question 9: Let's say, instead of the weather at the time of the flight, we want to know the average temperature each day in February 2013, at JFK. You will need to combine the `summarise()` and `group_by()` functions with the "weather" data you created back in question 4 to achieve a data table with 28 rows and two columns (day and average temp). Hint: Look at the left column on the first page of the dplyr cheat sheet. Hint 2: Your answer will use "\|\>" twice. These are called pipes and allow you to perform sequential operations within a single command. Essentially, "\|\>" acts like "and then do". For example: "A \|\> B \|\> C" really means "take A and then do B to it and then do C to it".
+
+```{r}
+
+MeanDailyTemp<- weather|> group_by(day)|> summarise(mean(temp))
+
+###MeanDailyTemp <- data.frame(t(df))
+###colnames(mdt) <- df[, 1]
+str(MeanDailyTemp)
+### created new table with avg temp each day according to JFK weather data
+```
+
+```{r}
+### This chunk of code is for grading purposes. 
+### Don't change/delete this chunk of code. 
+q9 <- MeanDailyTemp
+```
+
+------------------------------------------------------------------------
+
+Question 10 & 11: Calculate the mean and median for the DailyTemp data you just generated.
+
+```{r}
+MeanDailyTemp
+
+###meanfebtemp <- rowMeans(MeanDailyTemp[2,])
+meanfebtemp <- mean(MeanDailyTemp[["mean(temp)"]])
+meanfebtemp
+
+###medianfebtemp <- median(mdt$value)
+medianfebtemp <- median(MeanDailyTemp[["mean(temp)"]])
+medianfebtemp
+###MDT is fine the readout is just compacted whoops. mean and median of col 2 spec cols w double brackets and name
+```
+
+```{r}
+### This chunk of code is for grading purposes. 
+### Don't change/delete this chunk of code. 
+q10<- meanfebtemp
+q11<- medianfebtemp
+```
+
+Once you are done, click the "Knit" button above(It looks like a blue ball of yarn). Save the file with your name and the week number in the file name:
+
+(for example: "DONE_Liam_Mueller_Section_Assignment_4.rmd").
+
+**Then upload the .rmd file to canvas under the Week 4 Section Assignment before the deadline.**
+
+And that is it for this week!

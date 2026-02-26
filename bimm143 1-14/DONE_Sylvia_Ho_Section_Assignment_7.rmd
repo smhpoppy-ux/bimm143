@@ -1,0 +1,238 @@
+---
+title: "Section Assignment 7"
+date: "2/21/25"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = TRUE, error = TRUE, tidy = TRUE)
+```
+
+## Preliminary Setup
+
+Before you begin, make sure you have installed the necessary packages. This assignment uses the `tidyverse` and `palmerpenguins` packages. If you are running your own installed version of RStudio, you may need to install the `palmerpenguins` package Run the following code to load them:
+
+```{r}
+library(tidyverse)
+library(palmerpenguins)
+```
+
+## Your Information:
+
+```{r}
+### - NOT INCLUDING THIS INFORMATION WILL RESULT IN A PENALTY - ###
+firstname <- "sylvia"   # example: "Liam"
+lastname <- "ho"    # example: "Mueller"
+username <- "smh005"    # example: "lomueller"   Do not include the "@ucsd.edu" part!
+```
+
+## General Instructions
+
+This assignment has two parts, each focusing on a different statistical test using the `penguins` dataset. You will be given a null hypothesis and be tasked with doing the following for each:
+
+1.  Identify the appropriate test. It will be one of the following: one-sample t-test, paired t-test, two-sample t-test, or one-way ANOVA.
+2.  Filter the data as needed to conduct the test.
+3.  Test your assumption of normality by creating a histogram and conducting a Kolmogorov-Smirnov test.
+4.  Perform the statistical test and interpret the results.
+
+------------------------------------------------------------------------
+
+## ***Part 1: Adelie Penguins***
+
+**Null Hypothesis 1:**
+
+The mean body mass of male Adelie penguins does not exceed 4000 grams.
+
+#### Step 1: Identify appropriate hypothesis test
+
+Based on the null hypothesis, which statistical test should be used? Choose from the following options: "one-sample t-test", "paired t-test", two-sample t-test", or "one-way ANOVA". Your answer should be one of the 4 choices verbatim, in quotes, and that is it. For example: q1 \<- "two-sample t-test". Spelling and capitalization matter and errors will result in zero credit from the autograder.
+
+```{r}
+# Identify the appropriate test. 
+q1 <- "one-sample t-test"
+
+```
+
+#### Step 2: Filter 'penguins' to only include male Adelie penguins.
+
+```{r}
+# Filter data for male Adelie penguins
+adelie_male <- penguins |> 
+ filter(species == "Adelie" & sex == "male")
+adelie_male
+```
+
+```{r}
+### Grading code: Do not change or delete.
+q2 <- adelie_male
+```
+
+#### Step 3: Create a histogram.
+
+```{r}
+# Create a histogram of body_mass_g
+hist_adelie <- ggplot(adelie_male, aes(x = body_mass_g)) +
+  geom_histogram()
+
+print(hist_adelie)
+```
+
+```{r}
+### Grading code: Do not change or delete.
+q3 <- hist_adelie
+```
+
+#### Step 4: Perform a normality check using the Kolmogorov-Smirnov test. Assume homogeneity of variance, so we will not be using a Fligner-Killeen test.
+
+```{r}
+# Compute mean and standard deviation for the KS test
+# HINT: since there are missing values, use na.rm = TRUE as a parameter in the mean and sd functions
+adelie_mean <- mean(adelie_male$body_mass_g, na.rm = TRUE)
+adelie_sd <- sd(adelie_male$body_mass_g, na.rm = TRUE)
+
+# Perform the KS test for normality
+ks_adelie <- ks.test(adelie_male$body_mass_g, 
+                          "pnorm", 
+                          mean = adelie_mean, 
+                          sd = adelie_sd)
+print(ks_adelie)
+```
+
+```{r}
+### Grading code: Do not change or delete.
+q4 <- ks_adelie
+```
+
+#### Step 5: Conduct a test comparing mean body mass to 4000g.
+
+```{r}
+test_adelie <-t.test(adelie_male$body_mass_g, mu = 4000)
+
+print(test_adelie)
+```
+
+```{r}
+### Grading code: Do not change or delete.
+q5 <- test_adelie
+```
+
+#### Step 6: If test is significant and an ANOVA, perform a TukeyHSD post-hoc test. Otherwise, leave this code block empty.
+
+```{r}
+
+```
+
+#### Step 7: Your conclusions. Please write your conclusions in 1-2 sentences. You must include whether the null hypothesis is supported or rejected.
+
+```{r}
+q6 <- "The null hypothesis is supported. Mean is 4043.5 grams and p value is .2875, so there is not enough data to reject the null hypothesis."
+```
+
+------------------------------------------------------------------------
+
+## *Part 2: Chinstrap Penguins*
+
+**Null Hypothesis 2**
+
+The mean flipper length of female Chinstrap penguins is the same across the years 2007, 2008, and 2009.
+
+#### Step 1: Identify appropriate hypothesis test
+
+Based on the null hypothesis, which statistical test should be used? Choose from the following options: "one-sample t-test", "two-sample t-test", or "one-way ANOVA". Your answer should be one of the 3 choices verbatim, in quotes, and that is it. For example: q1 \<- "two-sample t-test". Spelling and capitalization matter and errors will result in zero credit from the autograder.
+
+```{r}
+# Identify the appropriate test. 
+q7 <- "one-way ANOVA"
+
+```
+
+#### Step 2: Filter 'penguins' to only include female Chinstrap penguins.
+
+```{r}
+# Filter data for female Chinstrap penguins
+chinstrap_female <- penguins %>%
+  filter(species == "Chinstrap" & sex == "female")
+chinstrap_female
+```
+
+```{r}
+### Grading code: Do not change or delete.
+q8 <- chinstrap_female
+```
+
+#### Step 3: Create a histogram.
+
+```{r}
+hist_chinstrap <- ggplot(chinstrap_female, aes(x = flipper_length_mm)) +
+  geom_histogram()
+print(hist_chinstrap)
+```
+
+```{r}
+### Grading code: Do not change or delete.
+q9 <- hist_chinstrap
+```
+
+#### Step 4: Perform a normality check using the Kolmogorov-Smirnov test. Assume homogeneity of variance, so we will not be using a Fligner-Killeen test.
+
+```{r}
+# This step is hard as I require you to fit all 3 ks tests into a single object. You will need to search for online resources that will help you fill in the group_by and summarize() functions correctly to complete this.
+
+ksc<- chinstrap_female |>
+  group_by(year) |>
+  summarize(ks_test = list(ks.test(flipper_length_mm, "pnorm", mean = mean(flipper_length_mm), sd = sd(flipper_length_mm))))
+
+ks_chinstrap<- ksc %>%
+  mutate(
+    statistic = map_dbl(ks_test, ~ .x$statistic),
+    p_value = map_dbl(ks_test, ~ .x$p.value)
+  ) %>%
+  select(year, statistic, p_value)
+
+
+print(ks_chinstrap)
+```
+
+```{r}
+### Grading code: Do not change or delete.
+q10 <- ks_chinstrap
+```
+
+#### Step 5: Test for differences in mean flipper length across years.
+
+```{r}
+# While year looks like numerical data, it is being treated as categorical in this case. Therefore, in this code you need to use 'as.factor(year)' and not just 'year'.
+test_chinstrap <- aov(flipper_length_mm ~ factor(year), data = chinstrap_female)
+
+summary(test_chinstrap)
+```
+
+```{r}
+### Grading code: Do not change or delete.
+q11 <- test_chinstrap
+```
+
+#### Step 6: If test is significant and an ANOVA, perform a TukeyHSD post-hoc test. Otherwise, leave this code block empty.
+
+```{r}
+tukey<- TukeyHSD(test_chinstrap)
+print(tukey)
+
+
+```
+
+#### Step 7: Your conclusions. Please write your conclusions in 1-2 sentences. You must include whether the null hypothesis is supported or rejected.
+
+```{r}
+### Please write your your conclusions for Part 2 here in 1-2 sentences
+q12 <- "The null hypothesis is rejected, as from 2009-2007, there is a statistically significant difference in mean flipper length as p adjusted is less than .05. However, for other years, the null hypothesis is upheld as there is not a significantly significant difference."
+
+```
+
+------------------------------------------------------------------------
+
+Once you are done, make sure there are no errors. Save the .rmd file with your name and the week number in the file name:
+
+(for example: "DONE_Liam_Mueller_Section_Assignment_7.rmd").
+
+Then upload this rmd file to canvas under the Week 7 module before the deadline.

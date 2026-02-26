@@ -1,0 +1,43 @@
+---
+title: "lab 04"
+author: "sylvia ho"
+date: "1/16/26"
+output: pdf_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(eval = TRUE)
+knitr::opts_chunk$set(error = TRUE)
+knitr::opts_chunk$set(tidy = TRUE)
+```
+
+```{r,echo=FALSE}
+### The output for this code block looks weird and kind of like an error, but it is not an error. ###
+library(tidyverse)
+```
+
+```{r}
+x<- 1:50
+plot(x)
+plot (x,sin(x), typ= "l", col = "blue", lwd = 3,
+xlab = "Is it lunch time yet")
+```
+
+```{r}
+install.packages("tinytex")
+tinytex::install_tinytex()
+
+```
+
+source("http://thegrantlab.org/misc/cdc.R")
+
+q1<- tail(cdc$weight)
+q1
+q2<- <- ggplot(data = cdc, aes(x = height, y = weight)) + geom_point(color = "blue") + 
+    ggtitle("weight (lb) vs height (in)") +
+    xlab("height(in)") + 
+    ylab("weight (lb)") 
+q2
+weight_kg <- cdc$weight * 0.453592

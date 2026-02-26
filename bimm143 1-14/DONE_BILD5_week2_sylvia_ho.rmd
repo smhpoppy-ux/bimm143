@@ -1,0 +1,179 @@
+---
+title: "Section Assignment 2"
+author: "sylvia ho"
+date: "1/19/2025"
+output: 
+  html_document:
+  theme: paper
+---
+
+```{r setup, include=FALSE}
+# Don't edit anything within this code block (lines 13-18). Code blocks are book ended with ```. Anything within these lines are treated as code by the computer. Anything outside of code blocks is treated like formatted text.
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(eval = TRUE)
+knitr::opts_chunk$set(error = TRUE)
+```
+
+***
+
+Things-to-Note: -
+1) Don't rename external files or edit them in any way
+2) Don't change the variable names
+3) Don't destroy or overwrite any variables 
+4) Don't use global path in your script. Instead use "setwd()" interactively in the console, but don't include this code in your submission
+
+If you don't take above instructions into account it might effect your grades.
+
+***
+
+Your Information: Fill in the empty quotations with the correct information!
+```{r}
+firstname <- "sylvia"   # example:firstname <- "Liam"
+lastname <- "ho"  # example: lastname <-"Mueller"
+username <- "smh005"  #example: username <- "lomueller"   Do not include the "@ucsd.edu" part!
+```
+
+Remember to add author in line 3 and date in line 4, example: date: "1/19/2024"
+
+If you forget to add your name, then you might not receive any points for this assignment
+***
+
+### Introduction
+
+This week, your assignment is to begin manipulating data in R. You will also learn how to import data from .CSV files. Each week during these section times, you will work in pairs or small groups to complete the tasks. 
+
+***
+
+Answer the following questions by typing the appropriate code in the code boxes (denoted by ``` signs). In all boxes when necessary, I have included the name of the object you need to create and the code to display that object. Please leave that code intact for this week. It helps speed up the grading process. Be mindful of code chunks that you are not to modify at the end of each question.
+
+
+***
+
+Questions:
+
+1. (1 point) Assign to a vector called X the values 1,3,5,6,7, and 9. Assign to a vector called Y the values 2,7,4,5,2 and 12. X has been done for you as an example.
+
+```{r}
+X<- c(1,3,5,6,7,9)
+X
+Y<- c(2,7,4,5,2,12)
+Y
+```
+
+```{r}
+### This chunk of code is for grading purposes. 
+### Don't change/delete this chunk of code. 
+q1 <- X
+q2 <- Y
+```
+
+  
+
+2. (1 point) Concatenate (combine) the two vectors(X and Y) together as one larger (length of 12) vector called Z.
+```{r}
+Z <- c(X,Y)
+  
+Z  
+```
+
+
+```{r}
+### This chunk of code is for grading purposes. 
+### Don't change/delete this chunk of code. 
+q3 <- Z  
+```
+
+  
+ 
+3. (1 point) Using R functions, calculate the mean of Z.
+```{r}
+meanZ<- mean(Z)
+meanZ
+```
+
+```{r}
+### This chunk of code is for grading purposes. 
+### Don't change/delete this chunk of code. 
+q4 <- meanZ  
+```
+
+4. (1 point) Create a new vector that includes all the values in Z that are less than 7.
+```{r}
+newZ<- Z[Z < 7]
+newZ
+```
+
+```{r}
+### This chunk of code is for grading purposes. 
+### Don't change/delete this chunk of code. 
+q5 <- newZ  
+```
+
+
+5. (1 point) Using R functions, calculate the length of newZ.
+```{r}
+lengthX<- length(newZ)
+lengthX
+```
+
+```{r}
+### This chunk of code is for grading purposes. 
+### Don't change/delete this chunk of code. 
+q6 <- lengthX  
+```
+  
+  
+
+6. (1 point) Read in the .csv provided ("Child_Heart_Surgery.csv") with this assignment and assign it to the object: DataWeek2.
+```{r}
+DataWeek2 <-read.csv ("Child_Heart_Surgery-1.csv")
+head(DataWeek2)
+```
+
+```{r}
+### This chunk of code is for grading purposes. 
+### Don't change/delete this chunk of code. 
+q7 <- DataWeek2
+```
+
+7. (1 point) Calculate the survival rate of each of these Hospitals. Save this vector as an object, you will need it in flowing questions.
+```{r}
+### SurvivalRate <- apply(X = DataWeek2 ,MARGIN = 2,FUN = sum, na.rm = FALSE ) 
+### SurvivalRate <-W2[,4] W2$Deaths/
+###df <- as.data.frame.matrix(DataWeek2) 
+df <- as.data.frame(DataWeek2)
+ ### SurvivalRate <-head(select(DataWeek2, -Hospital)) colSums (DataWeek2, na.rm = FALSE, dims = 1)
+###head(select(DataWeek2, contains("Survivor")))
+###df <- setNames(data.frame(as.list(1:5)), LETTERS[1:5])
+###new_df = subset(df, select = c(col1, col2))
+#SurvivalRate <- colSums(df[ , 3, drop = FALSE])
+names(df) <- c("c1", "c2", "c3", "c4")
+SurvivalRate <- df$c3/df$c2
+SurvivalRate
+
+```
+
+```{r}
+### This chunk of code is for grading purposes. 
+### Don't change/delete this chunk of code. 
+q8 <- SurvivalRate
+```
+  
+
+8. (1 point) Add the information you calculated in question 7 as a new column to the right of your data table.
+```{r}
+DataWeek2new <- cbind(DataWeek2,SurvivalRate)
+head(DataWeek2new)
+```
+
+```{r}
+### This chunk of code is for grading purposes. 
+### Don't change/delete this chunk of code. 
+q9 <- DataWeek2new
+```
+
+Double check that your name and date are correct, then check your work. Finally click the Knit button above(It looks like a blue ball of yarn). Save the file with your name and the week number in the file name 
+
+  (for example: "DONE_BILD5_week2_Liam_Mueller.rmd").  
+  
+Then Upload the rmd file to Canvas under Week 2 Section Assignment before the deadline.
