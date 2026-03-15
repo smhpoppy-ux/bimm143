@@ -3,8 +3,8 @@ bioinf
 repo for ucsd bimm 143
 [git editor](https://github.com/smhpoppy-ux/bimm143/blob/main/README.md)
 ## content
-- class05: [r data vis]
-- class06: [r fns](https://github.com/smhpoppy-ux/bimm143/tree/2754192e0a3d524f9fb8c70c2560dcf088157cba/bimm143_1-18/class06)
+- class05: [r data vis](https://github.com/smhpoppy-ux/bimm143/blob/73ce0e12bfeadab19f263b7a52a7ae72d1951f4d/bimm143_1-18/class05/class05.md)
+- class06: [r fns](https://github.com/smhpoppy-ux/bimm143/blob/73ce0e12bfeadab19f263b7a52a7ae72d1951f4d/bimm143_1-18/class06/class06.md)
 - class07: [machine learning](https://github.com/smhpoppy-ux/bimm143/tree/2754192e0a3d524f9fb8c70c2560dcf088157cba/bimm143_1-18/class07)
 - class08: [miniproj wisconsin pca](https://github.com/smhpoppy-ux/bimm143/tree/2754192e0a3d524f9fb8c70c2560dcf088157cba/bimm143_1-18/class08)
 - class09: [miniproj candy pca](https://github.com/smhpoppy-ux/bimm143/tree/2754192e0a3d524f9fb8c70c2560dcf088157cba/bimm143_1-18/class09)
