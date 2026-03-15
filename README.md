@@ -5,7 +5,7 @@ repo for ucsd bimm 143
 ## content
 - class05: [r data vis](https://github.com/smhpoppy-ux/bimm143/blob/73ce0e12bfeadab19f263b7a52a7ae72d1951f4d/bimm143_1-18/class05/class05.md)
 - class06: [r fns](https://github.com/smhpoppy-ux/bimm143/blob/73ce0e12bfeadab19f263b7a52a7ae72d1951f4d/bimm143_1-18/class06/class06.md)
-- class07: [machine learning](https://github.com/smhpoppy-ux/bimm143/blob/b40693587fc30ca6d21959307379fc9a80c1f0e5/bimm143_1-18/class07/class07.md)
+- class07: [machine learning](https://github.com/smhpoppy-ux/bimm143/blob/b40693587fc30ca6d21959307379fc9a80c1f0e5/bimm143_1-18/class07/lab07.md)
 - class08: [miniproj wisconsin pca](https://github.com/smhpoppy-ux/bimm143/blob/b68a1a5fdae1be644812553ecd2754a6c8d6af51/bimm143_1-18/class08/class8miniproj.md)
 - class09: [miniproj candy pca](https://github.com/smhpoppy-ux/bimm143/blob/b68a1a5fdae1be644812553ecd2754a6c8d6af51/bimm143_1-18/class09/class9miniproj.md)
 - class10: [r structural bioinf pdb](https://github.com/smhpoppy-ux/bimm143/blob/b40693587fc30ca6d21959307379fc9a80c1f0e5/bimm143_1-18/class10/class10.md)
