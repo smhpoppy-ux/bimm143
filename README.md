@@ -2,7 +2,6 @@
 bioinf
 repo for ucsd bimm 143
 [git editor](https://github.com/smhpoppy-ux/bimm143/blob/main/README.md)
-
 ## content
 - class05: [r data vis](https://github.com/smhpoppy-ux/bimm143/tree/2754192e0a3d524f9fb8c70c2560dcf088157cba/bimm143_1-18/Class-05--Data-Visualization-with-GGPLOTsylvia_files/figure-html)
 - class06: [r fns](https://github.com/smhpoppy-ux/bimm143/tree/2754192e0a3d524f9fb8c70c2560dcf088157cba/bimm143_1-18/class06)
