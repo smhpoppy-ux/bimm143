@@ -14,7 +14,7 @@ repo for ucsd bimm 143
 - class13: [r rna-seq, DESeq2](https://github.com/smhpoppy-ux/bimm143/tree/2754192e0a3d524f9fb8c70c2560dcf088157cba/bimm143_1-18/class13/class13.md)
 - class14: [r rna-seq miniproj](https://github.com/smhpoppy-ux/bimm143/tree/2754192e0a3d524f9fb8c70c2560dcf088157cba/bimm143_1-18/class14/class14.md)
 - class15: git - recursive
-- class16: [unix](https://github.com/smhpoppy-ux/bimm143/tree/2754192e0a3d524f9fb8c70c2560dcf088157cba/bimm143_1-18/class16/class16.md)
+- class16: [unix](https://github.com/smhpoppy-ux/bimm143/blob/4eaaa200e05c20d50fa0fcbf48a85c0999b28be5/bimm143_1-18/class16/HW8_unix_questions.pdf)
 - class17: [awd miniproj](https://github.com/smhpoppy-ux/bimm143/tree/2754192e0a3d524f9fb8c70c2560dcf088157cba/bimm143_1-18/class17/class17.md)
 - class18: [pertussis miniproj](https://github.com/smhpoppy-ux/bimm143/tree/2754192e0a3d524f9fb8c70c2560dcf088157cba/bimm143_1-18/class18/class18.md)
 - class19: [cancer miniproj](https://github.com/smhpoppy-ux/bimm143/tree/2754192e0a3d524f9fb8c70c2560dcf088157cba/bimm143_1-18/class19/class19.md)
