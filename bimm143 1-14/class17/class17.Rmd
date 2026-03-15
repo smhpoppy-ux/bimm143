@@ -1,0 +1,119 @@
+---
+title: "class17"
+author: "sylvia ho a18482382"
+output:
+  pdf_document: default
+  html_document: default
+---
+##bg
+downstream analysis
+`txtimport()` imports kallisto results
+```{r}
+library(tximport)
+
+# setup the folder and file-names to read
+folders <- dir(pattern="SRR21568*")
+samples <- sub("_quant", "", folders)
+files <- file.path( folders, "abundance.h5" )
+names(files) <- samples
+
+txi.kallisto <- tximport(files, type = "kallisto", txOut = TRUE)
+
+```
+
+
+```{r}
+head(txi.kallisto$counts)
+colSums(txi.kallisto$counts)
+sum(rowSums(txi.kallisto$counts)>0)
+
+```
+
+>filter out annotated w no reads, keep no change
+
+```{r}
+to.keep <- rowSums(txi.kallisto$counts) > 0
+kset.nonzero <- txi.kallisto$counts[to.keep,]
+keep2 <- apply(kset.nonzero,1,sd)>0
+x <- kset.nonzero[keep2,]
+```
+
+>PCA
+
+```{r}
+pca <- prcomp(t(x), scale=TRUE)
+summary(pca)
+
+```
+>pca 12
+
+```{r}
+plot(pca$x[,1], pca$x[,2],
+     col=c("blue","blue","red","red"),
+     xlab="PC1", ylab="PC2", pch=16)
+```
+>Q PC1 vs PC2
+
+```{r}
+library(ggplot2)
+library(ggrepel)
+
+mycols <- c("blue","blue","red","red")
+
+ggplot(pca$x) +
+  aes(PC1, PC2, label=rownames(pca$x)) +
+  geom_point( col=mycols ) +
+  geom_text_repel( col=mycols ) +
+  theme_bw()
+```
+>Q PC2 PC3
+
+```{r}
+library(ggplot2)
+library(ggrepel)
+
+mycols <- c("orange1","orange1","purple","purple")
+
+ggplot(pca$x) +
+  aes(PC2, PC3, label=rownames(pca$x)) +
+  geom_point( col=mycols ) +
+  geom_text_repel( col=mycols ) +
+  theme_bw()
+```
+>Q PC1 PC3
+
+```{r}
+library(ggplot2)
+library(ggrepel)
+
+mycols <- c("blue","blue","orange1","orange1")
+
+ggplot(pca$x) +
+  aes(PC1, PC3, label=rownames(pca$x)) +
+  geom_point( col=mycols ) +
+  geom_text_repel( col=mycols ) +
+  theme_bw()
+```
+
+
+```{r}
+library(DESeq2)
+
+sampleTable <- data.frame(condition = factor(rep(c("control", "treatment"), each = 2)))
+rownames(sampleTable) <- colnames(txi.kallisto$counts)
+
+dds <- DESeqDataSetFromTximport(txi.kallisto,
+                                sampleTable, 
+                                ~condition)
+```
+```{r}
+dds <- DESeq(dds)
+
+res <- results(dds)
+head(res)
+```
+
+
+
+
+
