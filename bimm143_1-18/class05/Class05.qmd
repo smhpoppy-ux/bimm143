@@ -3,7 +3,6 @@ title: "Class 05: Data Visualization with GGPLOT"
 author: "sylvia ho"
 format: pdf
 ---
-
 ## background ##
 there are lots of ways to make plots in R these include so called base R like the `plot()` and add packages like **ggplot2**
 
