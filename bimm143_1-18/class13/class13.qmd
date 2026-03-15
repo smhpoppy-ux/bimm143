@@ -3,6 +3,7 @@ title: "class13: rnaseq w deseq2"
 author: "sylvia ho a18482382"
 format: pdf
 ---
+
 ##bg
 rnaseq analysis on effects of dexamethasone (dex)
 steroid airway smooth muscle (asm) cell lines
