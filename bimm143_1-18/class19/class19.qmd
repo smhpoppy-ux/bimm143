@@ -1,0 +1,12 @@
+---
+title: "class19"
+author: "sylvia ho a18482382"
+format: html
+---
+```{r}
+library(bio3d)
+fil <- file("~/Downloads/A18482382_mutant_seq.fa")
+aln <- read.fasta(fil)
+blast.pdb(aln)
+```
+
